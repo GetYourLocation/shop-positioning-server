@@ -1,3 +1,4 @@
 #!/bin/sh
 
-matlab -nodisplay -r 'cd ~/ShopPositioningServer; server'
+cd ${MATLAB_HOME}/bin
+./matlab -nodisplay -r 'cd ~/ShopPositioningServer; server'
