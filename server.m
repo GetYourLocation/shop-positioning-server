@@ -17,13 +17,25 @@ while true
         while conn.BytesAvailable == 0
             pause(0.5);
         end
-        logd(sprintf('Receive %d bytes.', conn.BytesAvailable));
-        % data = fread(conn, conn.BytesAvailable, 'uint8');
-        % img = decodeJPEG(data);
-        % imshow(img);
-        data = fread(conn, conn.BytesAvailable, 'char');
-        logd(sprintf('Content: %s', data));
-        fwrite(conn, 'server hello');
+        if conn.BytesAvailable > 0
+            logd(sprintf('Receive %d bytes.', conn.BytesAvailable));
+
+            data = fread(conn, conn.BytesAvailable, 'uint8');
+            img = decodeJPEG(data);
+            imshow(img);
+
+            % data = fread(conn, conn.BytesAvailable, 'char');
+            % logd(sprintf('Content: %s', data));
+
+            % data = fread(conn, 1, 'double');
+            % x = typecast(data, 'single');
+            % logd(sprintf('Content: (%f, %f)', x(1), x(2)));
+            
+            data = typecast([single(100) single(200)], 'double');
+            fwrite(conn, data, 'double');
+        else
+            fwrite(conn, 'server hello');
+        end
     catch MException
         logd(getReport(MException));
     end
