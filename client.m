@@ -3,7 +3,7 @@ addpath('./util/');
 HOST = 'localhost';
 PORT = 8000;
 
-imgFile = fopen('./test/human.jpg', 'r');
+imgFile = fopen('./data/test/human.jpg', 'r');
 data = fread(imgFile);
 fclose(imgFile);
 
