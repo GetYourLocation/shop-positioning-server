@@ -10,9 +10,17 @@ Server that positionings shops.
 
 - Run server
 
-    ```matlab
-    >> server
-    ```
+    - Terminal
+
+        ```
+        $ ./run.sh
+        ```
+
+    - MATLAB
+
+        ```matlab
+        >> server
+        ```
 
 - Run client (for testing)
 
