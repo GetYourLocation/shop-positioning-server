@@ -8,7 +8,7 @@ function dataTable = readTable(filename)
     line = fgetl(fid);
     while ischar(line)
         chunks = strsplit(line, ',');
-        if firstLoop
+        if firstLoop  % Read table header
             for i = 1:numel(chunks)
                 colNames(colNamesIdx) = chunks(i);
                 colNamesIdx = colNamesIdx + 1;
@@ -17,10 +17,11 @@ function dataTable = readTable(filename)
         else
             for i = 1:numel(chunks)
                 str = char(chunks(i));
-                pos = strfind(str, ' ');
-                if numel(pos) == 0
+                if numel(strfind(str, '-')) ~= 0  % Empty bounding box values
+                    dataCell{dataCellRow, i} = cell(1);
+                elseif numel(strfind(str, ' ')) == 0  % Image path
                     dataCell{dataCellRow, i} = chunks(i);
-                else
+                else  % Bounding box values
                     boxVals = strsplit(str, ' ');
                     boxValsCell = cell(1);
                     boxValsRow = 1;
