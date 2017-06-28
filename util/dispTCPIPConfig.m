@@ -1,6 +1,6 @@
 function dispTCPIPConfig(conn)
     props = properties(conn);
-    fprintf('TCPIP config:\n{\n');
+    fprintf('\nServer configs:\n{\n');
     for i = 1:size(props)
         key = char(props(i));
         fprintf('\t''%s'': ', key);
