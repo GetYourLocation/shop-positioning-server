@@ -39,5 +39,6 @@ function dataTable = readTable(filename)
         end
         line = fgetl(fid);
     end
+    fclose(fid);
     dataTable = cell2table(dataCell, 'VariableNames', colNames);
 end
