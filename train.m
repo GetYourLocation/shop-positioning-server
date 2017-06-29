@@ -66,14 +66,14 @@ layers = [ ...
     classoutput];
 
 % Set Weights and Bias
-layers(2).Weights = rand([3 3 3 32]) * 0.002 - 0.001;
-layers(4).Weights = rand([3 3 32 32]) * 0.002 - 0.001;
-layers(7).Weights = rand([64 7200]) * 0.002 - 0.001;
-layers(9).Weights = rand([2 64]) * 0.002 - 0.001;
-layers(2).Bias = rand([1 1 32]) * 0.002 - 0.001;
-layers(4).Bias = rand([1 1 32]) * 0.002 - 0.001;
-layers(7).Bias = rand([64 1]) * 0.002 - 0.001;
-layers(9).Bias = rand([2 1]) * 0.002 - 0.001;
+layers(2).Weights = randn([3 3 3 32]) * 0.0001;
+layers(4).Weights = randn([3 3 32 32]) * 0.0001;
+layers(7).Weights = randn([64 7200]) * 0.0001;
+layers(9).Weights = randn([2 64]) * 0.0001;
+layers(2).Bias = randn([1 1 32]) * 0.0001;
+layers(4).Bias = randn([1 1 32]) * 0.0001;
+layers(7).Bias = randn([64 1]) * 0.0001;
+layers(9).Bias = randn([2 1]) * 0.0001;
 
 % Training options
 options = trainingOptions('sgdm', ...
