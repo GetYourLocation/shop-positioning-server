@@ -42,7 +42,7 @@ fc_1 = fullyConnectedLayer(64, ...
 
 relu_3 = reluLayer();
 
-fc_2 = fullyConnectedLayer(2, ...
+fc_2 = fullyConnectedLayer(3, ...
     'WeightLearnRateFactor', 1, ...
     'WeightL2Factor', 1, ...
     'BiasLearnRateFactor', 1, ...
@@ -65,24 +65,27 @@ layers = [ ...
     sm
     classoutput];
 
-% Set Weights and Bias
-layers(2).Weights = randn([3 3 3 32]) * 0.0001;
-layers(4).Weights = randn([3 3 32 32]) * 0.0001;
-layers(7).Weights = randn([64 7200]) * 0.0001;
-layers(9).Weights = randn([2 64]) * 0.0001;
-layers(2).Bias = randn([1 1 32]) * 0.0001;
-layers(4).Bias = randn([1 1 32]) * 0.0001;
-layers(7).Bias = randn([64 1]) * 0.0001;
-layers(9).Bias = randn([2 1]) * 0.0001;
+% layers = importCaffeLayers('model.prototxt');
+% layers = layers';
+
+% % Set Weights and Bias
+% layers(2).Weights = randn([3 3 3 32]) * 0.0001;
+% layers(4).Weights = randn([3 3 32 32]) * 0.0001;
+% layers(7).Weights = randn([64 7200]) * 0.0001;
+% layers(9).Weights = randn([2 64]) * 0.0001;
+% layers(2).Bias = randn([1 1 32]) * 0.0001;
+% layers(4).Bias = randn([1 1 32]) * 0.0001;
+% layers(7).Bias = randn([64 1]) * 0.0001;
+% layers(9).Bias = randn([2 1]) * 0.0001;
 
 % Training options
 options = trainingOptions('sgdm', ...
     'InitialLearnRate', 1e-6, ...
     'MaxEpochs', 1, ...
-    'CheckpointPath', tempdir);
+    'CheckpointPath', 'checkpoint');
 
 % Train detector
-detector = trainFasterRCNNObjectDetector(trainData, layers, options)
+detector = trainFasterRCNNObjectDetector(trainData, layers, options);
 
 % Predict
 img = imread('data/test_1.jpg');
