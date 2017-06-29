@@ -1,6 +1,6 @@
 addpath('./util/');
 
-HOST = 'localhost';
+HOST = '0.0.0.0';
 PORT = 8000;
 
 conn = tcpip(HOST, PORT, 'NetworkRole', 'server');
@@ -20,13 +20,16 @@ while true
         if conn.BytesAvailable > 0
             logd(sprintf('Receive %d bytes.', conn.BytesAvailable));
 
+            % Read image
             data = fread(conn, conn.BytesAvailable, 'uint8');
             img = decodeJPEG(data);
-            imshow(img);
+            % imshow(img);
 
+            % Read string
             % data = fread(conn, conn.BytesAvailable, 'char');
             % logd(sprintf('Content: %s', data));
 
+            % Read double
             % data = fread(conn, 1, 'double');
             % x = typecast(data, 'single');
             % logd(sprintf('Content: (%f, %f)', x(1), x(2)));
