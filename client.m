@@ -15,9 +15,13 @@ conn.Timeout = 10;  % seconds
 fopen(conn);
 pause(0.5);
 
+% Send image
 fwrite(conn, data);
+
+% Send string
 % fwrite(conn, 'client hello');
 
+% Send double
 % data = typecast([single(100) single(200)], 'double');
 % fwrite(conn, data, 'double');
 
