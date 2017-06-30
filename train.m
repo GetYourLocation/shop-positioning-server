@@ -1,5 +1,7 @@
 addpath('./util/');
 
+LABEL_COUNT = 87;
+
 trainData = readTable('data/train.csv');
 trainData.imageFilename = fullfile(pwd(), 'data', 'JPEGImages', trainData.imageFilename);
 
@@ -18,6 +20,8 @@ conv_1 = convolution2dLayer(3, 32, ...
     'BiasLearnRateFactor', 1, ... 
     'BiasL2Factor', 0, ...
     'Name', 'conv_1');
+conv_1.Weights = randParams([3 3 3 32]);
+conv_1.Bias = randParams([1 1 32]);
 
 relu_1 = reluLayer('Name', 'relu_1');
 
@@ -30,6 +34,8 @@ conv_2 = convolution2dLayer(3, 32, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'conv_2');
+conv_2.Weights = randParams([3 3 32 32]);
+conv_2.Bias = randParams([1 1 32]);
 
 relu_2 = reluLayer('Name', 'relu_2');
 
@@ -44,21 +50,25 @@ fc_1 = fullyConnectedLayer(64, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'fc_1');
+fc_1.Weights = randParams([64 7200]);
+fc_1.Bias = randParams([64 1]);
 
 relu_3 = reluLayer('Name', 'relu_3');
 
-fc_2 = fullyConnectedLayer(3, ...
+fc_2 = fullyConnectedLayer(LABEL_COUNT, ...
     'WeightLearnRateFactor', 1, ...
     'WeightL2Factor', 1, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'fc_2');
+fc_2.Weights = randParams([LABEL_COUNT 64]);
+fc_2.Bias = randParams([LABEL_COUNT 1]);
 
 sm = softmaxLayer('Name', 'softmax');
 
 classoutput = classificationLayer('Name', 'classoutput');
 
-% Build layer with code
+% Build layer with codes
 layers = [ ...
     imageinput
     conv_1
@@ -72,17 +82,7 @@ layers = [ ...
     sm
     classoutput]
 
-% Set Weights and Bias
-layers(2).Weights = randn([3 3 3 32]) * 0.0001;
-layers(4).Weights = randn([3 3 32 32]) * 0.0001;
-layers(7).Weights = randn([64 7200]) * 0.0001;
-layers(9).Weights = randn([3 64]) * 0.0001;
-layers(2).Bias = randn([1 1 32]) * 0.0001;
-layers(4).Bias = randn([1 1 32]) * 0.0001;
-layers(7).Bias = randn([64 1]) * 0.0001;
-layers(9).Bias = randn([3 1]) * 0.0001;
-
-% Import layer from caffe prototxt
+% Build layer from caffe prototxt
 % layers = importCaffeLayers('model.prototxt');
 % layers = layers'
 
@@ -90,7 +90,7 @@ layers(9).Bias = randn([3 1]) * 0.0001;
 options = trainingOptions('sgdm', ...
     'InitialLearnRate', 1e-6, ...
     'MaxEpochs', 1, ...
-    'CheckpointPath', 'checkpoint');
+    'CheckpointPath', 'checkpoint')
 
 % Train detector
 detector = trainFasterRCNNObjectDetector(trainData, layers, options)
