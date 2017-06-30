@@ -1,16 +1,18 @@
 name: "CaffeNet"
 
 layer {
-	name: "imageinput"
-	type: "Input"
-	top: "data"
-	top: "label"
-	input_param {
-		shape: {dim: 50
-		dim: 3
-		dim: 32
-		dim: 32}
-	}
+  name: "imageinput"
+  type: "Input"
+  top: "data"
+  top: "label"
+  input_param {
+    shape: {
+      dim: 50
+      dim: 3
+      dim: 32
+      dim: 32
+    }
+  }
 }
 
 layer {                    
@@ -22,8 +24,8 @@ layer {
     num_output: 32
     kernel_size: 3
     weight_filler {
-    	type: "gaussian"
-    	std: 0.01
+      type: "gaussian"
+      std: 0.01
     }
     bias_term: true
     pad: 1
@@ -38,7 +40,7 @@ layer {
   bottom: "conv1"
   top: "conv1"
   relu_param {
-  	negative_slope: 0
+    negative_slope: 0
   }
 }
 
@@ -51,10 +53,10 @@ layer {
     num_output: 32
     kernel_size: 3
     weight_filler {
-    	type: "gaussian"
-    	std: 0.01
+      type: "gaussian"
+      std: 0.01
     }
-	bias_term: true
+  bias_term: true
     pad: 1
     stride: 1
     group: 1
@@ -67,7 +69,7 @@ layer {
   bottom: "conv2"
   top: "conv2"
   relu_param {
-  	negative_slope: 0
+    negative_slope: 0
   }
 }
 
@@ -78,7 +80,7 @@ layer {
   top: "pool"
   pooling_param {
     kernel_size: 3
-	  pool: MAX
+    pool: MAX
     stride: 2
     pad: 0
   }
@@ -92,12 +94,12 @@ layer {
   inner_product_param {
     num_output: 64
     weight_filler {
-    	type: "gaussian"
-    	value: 0.01
+      type: "gaussian"
+      value: 0.01
     }
     bias_filler {
-    	type: "constant"
-    	value: 0
+      type: "constant"
+      value: 0
     }
     bias_term: true
   }
@@ -109,7 +111,7 @@ layer {
   bottom: "fc1"
   top: "fc1"
   relu_param {
-  	negative_slope: 0
+    negative_slope: 0
   }
 }
 
@@ -119,14 +121,14 @@ layer {
   bottom: "fc1"
   top: "fc2"
   inner_product_param {
-    num_output: 3
+    num_output: 87
     weight_filler {
-    	type: "gaussian"
-    	value: 0.01
+      type: "gaussian"
+      value: 0.01
     }
     bias_filler {
-    	type: "constant"
-    	value: 0
+      type: "constant"
+      value: 0
     }
     bias_term: true
   }
