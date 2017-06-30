@@ -1,17 +1,18 @@
 addpath('./util/');
 
-LABEL_COUNT = 87;
+DATA_DIR = 'data';
 
-trainData = readTable('data/train.csv');
-trainData.imageFilename = fullfile(pwd(), 'data', 'JPEGImages', trainData.imageFilename);
+trainData = readTable(fullfile(DATA_DIR, 'train.csv'));
+trainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', trainData.imageFilename);
+% trainData = [trainData(:, 1) trainData(:, 40) trainData(:, 59)];
 
 % Set layers
-imageinput = imageInputLayer([32, 32, 3], ...
+imageInput = imageInputLayer([32, 32, 3], ...
     'DataAugmentation', 'none', ...
     'Normalization', 'zerocenter', ...
     'Name', 'imageinput');
 
-conv_1 = convolution2dLayer(3, 32, ...
+conv1 = convolution2dLayer(3, 32, ...
     'Stride', 1, ...
     'Padding', 1, ...
     'NumChannels', 3, ...
@@ -20,12 +21,12 @@ conv_1 = convolution2dLayer(3, 32, ...
     'BiasLearnRateFactor', 1, ... 
     'BiasL2Factor', 0, ...
     'Name', 'conv_1');
-conv_1.Weights = randParams([3 3 3 32]);
-conv_1.Bias = randParams([1 1 32]);
+conv1.Weights = randParams([3 3 3 32], 0);
+conv1.Bias = randParams([1 1 32], 1);
 
-relu_1 = reluLayer('Name', 'relu_1');
+relu1 = reluLayer('Name', 'relu_1');
 
-conv_2 = convolution2dLayer(3, 32, ...
+conv2 = convolution2dLayer(3, 32, ...
     'Stride', 1, ...
     'Padding', 1, ...
     'NumChannels', 32, ...
@@ -34,55 +35,55 @@ conv_2 = convolution2dLayer(3, 32, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'conv_2');
-conv_2.Weights = randParams([3 3 32 32]);
-conv_2.Bias = randParams([1 1 32]);
+conv2.Weights = randParams([3 3 32 32], 0);
+conv2.Bias = randParams([1 1 32], 1);
 
-relu_2 = reluLayer('Name', 'relu_2');
+relu2 = reluLayer('Name', 'relu_2');
 
 maxpool = maxPooling2dLayer(3, ...
     'Stride', 2, ...
     'Padding', 0, ...
     'Name', 'maxpool');
 
-fc_1 = fullyConnectedLayer(64, ...
+fc1 = fullyConnectedLayer(64, ...
     'WeightLearnRateFactor', 1, ...
     'WeightL2Factor', 1, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'fc_1');
-fc_1.Weights = randParams([64 7200]);
-fc_1.Bias = randParams([64 1]);
+fc1.Weights = randParams([64 7200], 0);
+fc1.Bias = randParams([64 1], 1);
 
-relu_3 = reluLayer('Name', 'relu_3');
+relu3 = reluLayer('Name', 'relu_3');
 
-fc_2 = fullyConnectedLayer(LABEL_COUNT, ...
+fc2 = fullyConnectedLayer(size(trainData, 2), ...
     'WeightLearnRateFactor', 1, ...
     'WeightL2Factor', 1, ...
     'BiasLearnRateFactor', 1, ...
     'BiasL2Factor', 0, ...
     'Name', 'fc_2');
-fc_2.Weights = randParams([LABEL_COUNT 64]);
-fc_2.Bias = randParams([LABEL_COUNT 1]);
+fc2.Weights = randParams([size(trainData, 2) 64], 0);
+fc2.Bias = randParams([size(trainData, 2) 1], 1);
 
-sm = softmaxLayer('Name', 'softmax');
+softmax = softmaxLayer('Name', 'softmax');
 
-classoutput = classificationLayer('Name', 'classoutput');
+classOutput = classificationLayer('Name', 'classoutput');
 
 % Build layer with codes
 layers = [ ...
-    imageinput
-    conv_1
-    relu_1
-    conv_2
-    relu_2
+    imageInput
+    conv1
+    relu1
+    conv2
+    relu2
     maxpool
-    fc_1
-    relu_3
-    fc_2
-    sm
-    classoutput]
+    fc1
+    relu3
+    fc2
+    softmax
+    classOutput]
 
-% Build layer from caffe prototxt
+% Build layer with caffe prototxt
 % layers = importCaffeLayers('model.prototxt');
 % layers = layers'
 
@@ -96,8 +97,7 @@ options = trainingOptions('sgdm', ...
 detector = trainFasterRCNNObjectDetector(trainData, layers, options)
 
 % Predict
-img = imread('data/test_1.jpg');
-% img = imread('data/test_2.jpg');
+img = imread(fullfile(DATA_DIR, 'test.jpg'));
 [bbox, score, label] = detect(detector, img);
 detectedImg = insertShape(img, 'Rectangle', bbox);
 figure;
