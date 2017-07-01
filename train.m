@@ -3,13 +3,13 @@ addpath('./util/');
 DATA_DIR = 'data';
 
 fprintf('Loading training data...\n');
-[trainData, missingLabels] = readTable(fullfile(DATA_DIR, 'train.csv'));
+[trainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
 trainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', trainData.imageFilename);
 % trainData = [trainData(:, 1) trainData(:, 40) trainData(:, 59)];
 fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 
-% Show missing labels
-missingLabels
+% Show labels info
+labelsCnt
 
 % Set layers
 imageInput = imageInputLayer([32, 32, 3], ...
