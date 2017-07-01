@@ -1,16 +1,17 @@
-function [dataTable, missingLabels] = readTable(filename)
+function [dataTable, labelsCnt] = readTable(filename)
     fid = fopen(filename, 'r');
     colNames = cell(1);
     colNamesIdx = 1;
     dataCell = cell(1);
     dataCellRow = 1;
     firstLoop = true;
-    labels = [];
+    labelsCnt = cell(1);
     line = fgetl(fid);
     while ischar(line)
         chunks = strsplit(line, ',');
         if firstLoop  % Read table header
-            labels = zeros(numel(chunks), 1);
+            labelsCnt = cell(1, numel(chunks) - 1);
+            labelsCnt(:) = {0};
             for i = 1:numel(chunks)
                 colNames(colNamesIdx) = chunks(i);
                 colNamesIdx = colNamesIdx + 1;
@@ -24,9 +25,8 @@ function [dataTable, missingLabels] = readTable(filename)
                     dataCell{dataCellRow, i} = cell(1);
                 elseif numel(strfind(str, ' ')) == 0  % Image path
                     dataCell{dataCellRow, i} = chunks(i);
-                    labels(i) = 1;
                 else  % Bounding box values
-                    labels(i) = 1;
+                    labelsCnt{i - 1} = labelsCnt{i - 1} + 1;
                     boxFound = true;
                     boxVals = strsplit(str, ' ');
                     boxValsCell = cell(1);
@@ -47,7 +47,9 @@ function [dataTable, missingLabels] = readTable(filename)
         end
         line = fgetl(fid);
     end
-    fclose(fid);
+    fclose('all');
     dataTable = cell2table(dataCell, 'VariableNames', colNames);
-    missingLabels = colNames(find(labels == 0));
+    labelsCnt = [colNames(:, 2:end); labelsCnt]';
+    [trash idx] = sort([labelsCnt{:, 2}]);
+    labelsCnt = labelsCnt(idx, :);
 end
