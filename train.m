@@ -1,4 +1,5 @@
 addpath('./util/');
+setEncoding();
 
 DATA_DIR = 'data';
 
