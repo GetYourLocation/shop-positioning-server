@@ -1,5 +1,5 @@
 addpath('./util/');
-setEncoding();
+% setEncoding();
 
 HOST = 'localhost';
 PORT = 8000;
