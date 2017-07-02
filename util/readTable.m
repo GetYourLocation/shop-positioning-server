@@ -52,4 +52,9 @@ function [dataTable, labelsCnt] = readTable(filename)
     labelsCnt = [colNames(:, 2:end); labelsCnt]';
     [trash idx] = sort([labelsCnt{:, 2}]);
     labelsCnt = labelsCnt(idx, :);
+    dict = genLabelDict();
+    for i = 1:size(labelsCnt, 1)
+        strCell = labelsCnt(i, 1);
+        labelsCnt(i, 3) = dict(strCell{1});
+    end
 end
