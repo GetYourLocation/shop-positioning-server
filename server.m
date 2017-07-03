@@ -25,6 +25,17 @@ while true
             data = fread(conn, conn.BytesAvailable, 'uint8');
             img = decodeJPEG(data);
             % imshow(img);
+           
+            input_data = load('data.mat');
+            detector = input_data.data.detector;
+
+            % Run detector.
+            [bbox, score, label] = detect(detector, img);
+
+            % Display detection results.
+            detectedImg = insertShape(img, 'Rectangle', bbox);
+            figure
+            imshow(detectedImg)
 
             % Read string
             % data = fread(conn, conn.BytesAvailable, 'char');
@@ -35,14 +46,25 @@ while true
             % x = typecast(data, 'single');
             % logd(sprintf('Content: (%f, %f)', x(1), x(2)));
             
-            data = typecast([single(100) single(200)], 'double');
-            fwrite(conn, data, 'double');
+            if isempty(label)
+                data = typecast([single(0) single(0)], 'double');
+                fwrite(conn, data, 'double');
+            else
+                dict = genLabelDict();
+                dict_shop = dict(label);
+                dict_pos = dict_shop{1, 2};
+                data = typecast([single(dict_pos(1)) single(dict_pos(2))], 'double');
+                fwrite(conn, data, 'double');
+            end
         else
             fwrite(conn, 'server hello');
         end
     catch MException
         logd(getReport(MException));
+        data = typecast([single(0) single(0)], 'double');
+        fwrite(conn, data, 'double');
     end
+    data
     fclose(conn);
     logd('Connection closed.');
 end
