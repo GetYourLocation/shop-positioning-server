@@ -32,6 +32,8 @@ while true
             img = decodeJPEG(rawImg);
             logd('Detecting...');
             [bbox, score, label] = detect(detector, img);
+            [max_score, max_score_index] = max(score);
+            max_score_label = char(label(max_score_index));
             logd('Done.');
 
             % Display detection results
@@ -40,7 +42,7 @@ while true
             % imshow(detectedImg);
             
             if ~isempty(label)
-                val = labelDict(label);
+                val = labelDict(max_score_label);
                 pos = val{1, 2};
                 res = typecast([single(pos(1)) single(pos(2))], 'double');
             end
