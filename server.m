@@ -35,9 +35,9 @@ while true
             logd('Done.');
 
             % Display detection results
-            detectedImg = insertShape(img, 'Rectangle', bbox);
-            figure;
-            imshow(detectedImg);
+            % detectedImg = insertShape(img, 'Rectangle', bbox);
+            % figure;
+            % imshow(detectedImg);
             
             if ~isempty(label)
                 val = labelDict(label);
