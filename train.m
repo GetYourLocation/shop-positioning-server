@@ -6,7 +6,7 @@ DATA_DIR = 'data';
 fprintf('Loading training data...\n');
 [trainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
 trainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', trainData.imageFilename);
-trainData = choose(trainData, 50);
+% trainData = choose(trainData, 50);
 fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 
 % Show labels info
