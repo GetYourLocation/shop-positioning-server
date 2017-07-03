@@ -15,7 +15,7 @@ data = load('detector.mat');
 detector = data.detector;
 labelDict = genLabelDict();
 
-fprintf('Server listening on port %d...\n', PORT);
+fprintf('Server listening on port %d...\n\n', PORT);
 while true
     res = typecast([single(0) single(0)], 'double');  % Default response
     try
