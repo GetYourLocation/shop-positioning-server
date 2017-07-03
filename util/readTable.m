@@ -55,6 +55,7 @@ function [dataTable, labelsCnt] = readTable(filename)
     dict = genLabelDict();
     for i = 1:size(labelsCnt, 1)
         strCell = labelsCnt(i, 1);
-        labelsCnt(i, 3) = dict(strCell{1});
+        val = dict(strCell{1});
+        labelsCnt(i, 3) = val(1);
     end
 end
