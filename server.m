@@ -10,8 +10,14 @@ conn.OutputBufferSize = 5000000;
 conn.Timeout = 10;  % seconds
 dispTCPIPConfig(conn);
 
+% Load detector and label dict
+data = load('detector.mat');
+detector = data.detector;
+labelDict = genLabelDict();
+
 fprintf('Server listening on port %d...\n', PORT);
 while true
+    res = typecast([single(0) single(0)], 'double');  % Default response
     try
         fopen(conn);
         logd('Connection established.');
@@ -22,49 +28,28 @@ while true
             logd(sprintf('Receive %d bytes.', conn.BytesAvailable));
 
             % Read image
-            data = fread(conn, conn.BytesAvailable, 'uint8');
-            img = decodeJPEG(data);
-            % imshow(img);
-           
-            input_data = load('data.mat');
-            detector = input_data.data.detector;
-
-            % Run detector.
+            rawImg = fread(conn, conn.BytesAvailable, 'uint8');
+            img = decodeJPEG(rawImg);
+            logd('Detecting...');
             [bbox, score, label] = detect(detector, img);
+            logd('Done.');
 
-            % Display detection results.
+            % Display detection results
             detectedImg = insertShape(img, 'Rectangle', bbox);
-            figure
-            imshow(detectedImg)
-
-            % Read string
-            % data = fread(conn, conn.BytesAvailable, 'char');
-            % logd(sprintf('Content: %s', data));
-
-            % Read double
-            % data = fread(conn, 1, 'double');
-            % x = typecast(data, 'single');
-            % logd(sprintf('Content: (%f, %f)', x(1), x(2)));
+            figure;
+            imshow(detectedImg);
             
-            if isempty(label)
-                data = typecast([single(0) single(0)], 'double');
-                fwrite(conn, data, 'double');
-            else
-                dict = genLabelDict();
-                dict_shop = dict(label);
-                dict_pos = dict_shop{1, 2};
-                data = typecast([single(dict_pos(1)) single(dict_pos(2))], 'double');
-                fwrite(conn, data, 'double');
+            if ~isempty(label)
+                val = labelDict(label);
+                pos = val{1, 2};
+                res = typecast([single(pos(1)) single(pos(2))], 'double');
             end
-        else
-            fwrite(conn, 'server hello');
         end
+        fwrite(conn, res, 'double');
     catch MException
         logd(getReport(MException));
-        data = typecast([single(0) single(0)], 'double');
-        fwrite(conn, data, 'double');
+        fwrite(conn, res, 'double');
     end
-    data
     fclose(conn);
     logd('Connection closed.');
 end

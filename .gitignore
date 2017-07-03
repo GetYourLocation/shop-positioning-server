@@ -1,3 +1,5 @@
 *.mat
 JPEGImages
 train.csv
+
+!detector.mat
