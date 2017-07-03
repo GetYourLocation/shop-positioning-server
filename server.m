@@ -26,25 +26,18 @@ while true
         end
         if conn.BytesAvailable > 0
             logd(sprintf('Receive %d bytes.', conn.BytesAvailable));
-
-            % Read image
             rawImg = fread(conn, conn.BytesAvailable, 'uint8');
             img = decodeJPEG(rawImg);
             logd('Detecting...');
-            [bbox, score, label] = detect(detector, img);
-            [max_score, max_score_index] = max(score);
-            max_score_label = char(label(max_score_index));
-            logd('Done.');
-
-            % Display detection results
-            % detectedImg = insertShape(img, 'Rectangle', bbox);
-            % figure;
-            % imshow(detectedImg);
-            
+            [bbox, score, label] = detect(detector, img)
             if ~isempty(label)
-                val = labelDict(max_score_label);
-                pos = val{1, 2};
-                res = typecast([single(pos(1)) single(pos(2))], 'double');
+                [maxScore, maxScoreIdx] = max(score);
+                labelName = char(label(maxScoreIdx));
+                if isKey(labelDict, labelName)
+                    val = labelDict(labelName);
+                    pos = val{1, 2};
+                    res = typecast([single(pos(1)) single(pos(2))], 'double');
+                end
             end
         end
         fwrite(conn, res, 'double');
