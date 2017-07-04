@@ -15,7 +15,7 @@ fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 labelsCnt
 
 % Build layers
-layers = genLayers('code', size(trainData, 2), DETECTOR_PATH)
+layers = genLayers('checkpoint', size(trainData, 2), DETECTOR_PATH)
 
 % Training options
 options = trainingOptions('sgdm', ...
