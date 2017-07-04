@@ -6,9 +6,9 @@ DETECTOR_PATH = 'detector.mat';
 RESULT_PATH = 'test_result.csv';
 
 fprintf('Loading testing data...\n');
-[testData, labelsCnt] = readTable(fullfile(DATA_DIR, 'test.csv'));
-testData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', testData.imageFilename);
-testData = choose(testData, 3);  % Choose only a part of samples of each label to test
+[oriTestData, labelsCnt] = readTable(fullfile(DATA_DIR, 'test.csv'));
+oriTestData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', oriTestData.imageFilename);
+testData = choose(oriTestData, 3);  % Choose only a part of samples of each label to test
 fprintf('Testing data size: %d*%d\n', size(testData, 1), size(testData, 2));
 
 % Show labels info

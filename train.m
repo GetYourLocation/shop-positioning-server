@@ -6,9 +6,9 @@ DETECTOR_PATH = 'detector.mat';
 CAFFE_MODEL_PATH = 'model.prototxt';
 
 fprintf('Loading training data...\n');
-[trainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
-trainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', trainData.imageFilename);
-trainData = choose(trainData, 10);  % Choose only a part of samples of each label to train
+[oriTrainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
+oriTrainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', oriTrainData.imageFilename);
+trainData = choose(oriTrainData, 10);  % Choose only a part of samples of each label to train
 fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 
 % Show labels info
