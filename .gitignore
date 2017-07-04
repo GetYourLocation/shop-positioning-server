@@ -1,6 +1,5 @@
 *.mat
+*.csv
 JPEGImages
-train.csv
-test.csv
 
 !detector.mat

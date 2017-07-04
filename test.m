@@ -3,6 +3,7 @@ setEncoding();
 
 DATA_DIR = 'data';
 DETECTOR_PATH = 'detector.mat';
+RESULT_PATH = 'test_result.csv';
 
 fprintf('Loading testing data...\n');
 [testData, labelsCnt] = readTable(fullfile(DATA_DIR, 'test.csv'));
@@ -19,7 +20,7 @@ detector = data.detector
 labelDict = genLabelDict();
 
 fprintf('Testing...\n')
-testResult = {'label' 'total' 'pass' 'fail' 'failedImages'};
+testResult = {'Label' 'Total' 'Passed' 'Failed' 'FailedImages'};
 labelNames = testData.Properties.VariableNames;
 for i = 2:size(labelNames, 2)
     testResult{i, 1} = labelNames(1, i);
@@ -58,5 +59,6 @@ for i = 1:size(testData, 1)
     end
     fprintf('Finish %d\n', i);
 end
-fprintf('\nDone.\n');
-testResult
+testResult = cell2table(testResult);
+writetable(testResult, RESULT_PATH, 'WriteVariableNames', false);
+fprintf('Testing results saved to ''%s''.\n', RESULT_PATH);
