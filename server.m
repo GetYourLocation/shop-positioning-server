@@ -17,7 +17,8 @@ labelDict = genLabelDict();
 
 fprintf('Server listening on port %d...\n\n', PORT);
 while true
-    res = typecast([single(0) single(0)], 'double');  % Default response
+    x = 0;
+    y = 0;
     try
         fopen(conn);
         logd('Connection established.');
@@ -29,22 +30,20 @@ while true
             rawImg = fread(conn, conn.BytesAvailable, 'uint8');
             img = decodeJPEG(rawImg);
             logd('Detecting...');
-            [bbox, score, label] = detect(detector, img)
-            if ~isempty(label)
-                [maxScore, maxScoreIdx] = max(score);
-                labelName = char(label(maxScoreIdx));
-                if isKey(labelDict, labelName)
-                    val = labelDict(labelName);
-                    pos = val{1, 2};
-                    res = typecast([single(pos(1)) single(pos(2))], 'double');
-                end
+            [bbox, score, label, bestLabel] = predict(detector, img, false)
+            if isKey(labelDict, bestLabel)
+                val = labelDict(bestLabel);
+                pos = val{1, 2};
+                x = pos(1);
+                y = pos(2);
             end
         end
-        fwrite(conn, res, 'double');
     catch MException
         logd(getReport(MException));
-        fwrite(conn, res, 'double');
     end
+    logd(sprintf('Return location: (%f, %f)', x, y));
+    fwrite(conn, typecast([single(x) single(y)], 'double'), 'double');
+    pause(0.5);  % Waiting data transfer
     fclose(conn);
     logd('Connection closed.');
 end

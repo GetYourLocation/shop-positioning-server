@@ -2,11 +2,12 @@ addpath('./util/');
 setEncoding();
 
 DATA_DIR = 'data';
+DETECTOR_PATH = 'detector.mat';
 
 fprintf('Loading training data...\n');
 [trainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
 trainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', trainData.imageFilename);
-% trainData = choose(trainData, 50);  % Choose only a part of samples of each label to train
+trainData = choose(trainData, 50);  % Choose only a part of samples of each label to train
 fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 
 % Show labels info
@@ -30,13 +31,8 @@ options = trainingOptions('sgdm', ...
     'Shuffle', 'never', ...
     'Verbose', 1, ...
     'VerboseFrequency', 50)
+fprintf('\n')
 
 % Train detector
 detector = trainFasterRCNNObjectDetector(trainData, layers, options)
-
-% Predict
-img = imread(fullfile(DATA_DIR, 'test.jpg'));
-[bbox, score, label] = detect(detector, img);
-detectedImg = insertShape(img, 'Rectangle', bbox);
-figure;
-imshow(detectedImg);
+save(DETECTOR_PATH, 'detector');
