@@ -86,6 +86,5 @@ function dict = genLabelDict()
     dict('hg') = {'江湖火锅（小）' [793 201]};
     dict('dks') = {'大卡司' [2303 645]};
     dict('dkse') = {'DAKASI（大卡司英文）' [2303 645]};
-    dict('vehicle') = {'测试标签' [10 20]};
     dict('Background') = {'背景' [0 0]};
 end

@@ -48,6 +48,8 @@ function [dataTable, labelsCnt] = readTable(filename)
         line = fgetl(fid);
     end
     fclose('all');
+    perm = randperm(size(dataCell, 1));
+    dataCell = dataCell(perm, :);  % Shuffle
     dataTable = cell2table(dataCell, 'VariableNames', colNames);
     labelsCnt = [colNames(:, 2:end); labelsCnt]';
     [trash idx] = sort([labelsCnt{:, 2}]);

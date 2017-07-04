@@ -1,9 +1,10 @@
-function layers = genLayers(outputSize, src, modelPath)
+function layers = genLayers(src, outputSize, modelPath)
     if strcmp(src, 'caffe_model')
-        layers = importCaffeLayers('model.prototxt');
+        layers = importCaffeLayers(modelPath);
         layers = layers';
     else if strcmp(src, 'checkpoint')
-        % TODO
+        data = load(modelPath);
+        layers = data.detector.Network.Layers;
     else
         imageInput = imageInputLayer([32, 32, 3], ...
             'DataAugmentation', 'none', ...
