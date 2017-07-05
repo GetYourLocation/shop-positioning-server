@@ -40,6 +40,12 @@ Server that positionings shops.
     >> test
     ```
 
+- Predict one image
+
+    ```matlab
+    >> predictOne(path_to_image)
+    ```
+
 ## License
 
 See the [LICENSE](./LICENSE) file for license rights and limitations.
