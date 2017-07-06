@@ -31,13 +31,14 @@ function [dataTable, labelsCnt] = readTable(filename)
                     boxVals = strsplit(str, ' ');
                     boxValsCell = cell(1);
                     boxValsRow = 1;
-                    for j = 1:numel(boxVals)
-                        val = str2double(char(boxVals(j)));
-                        boxValsCell{1}(boxValsRow, mod(j - 1, 4) + 1) = val;
-                        if mod(j, 4) == 0
-                            boxValsRow = boxValsRow + 1;
-                        end
-                    end
+                    x1 = str2double(char(boxVals(1)));
+                    y1 = str2double(char(boxVals(2)));
+                    x2 = str2double(char(boxVals(3)));
+                    y2 = str2double(char(boxVals(4)));
+                    boxValsCell{1}(boxValsRow, 1) = x1;
+                    boxValsCell{1}(boxValsRow, 2) = y1;
+                    boxValsCell{1}(boxValsRow, 3) = x2 - x1;
+                    boxValsCell{1}(boxValsRow, 4) = y2 - y1;
                     dataCell{dataCellRow, i} = boxValsCell;
                 end
             end

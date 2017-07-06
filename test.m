@@ -8,7 +8,7 @@ RESULT_PATH = 'test_result.csv';
 fprintf('Loading testing data...\n');
 [oriTestData, labelsCnt] = readTable(fullfile(DATA_DIR, 'test.csv'));
 oriTestData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', oriTestData.imageFilename);
-testData = choose(oriTestData, 40);  % Choose only a part of samples of each label to test
+testData = choose(oriTestData, 15);  % Choose only a part of samples of each label to test
 fprintf('Testing data size: %d*%d\n', size(testData, 1), size(testData, 2));
 
 % Show labels info
