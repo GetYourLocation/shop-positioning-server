@@ -7,7 +7,8 @@ DETECTOR_PATH = 'detector.mat';
 fprintf('Loading training data...\n');
 [oriTrainData, labelsCnt] = readTable(fullfile(DATA_DIR, 'train.csv'));
 oriTrainData.imageFilename = fullfile(pwd(), DATA_DIR, 'JPEGImages', oriTrainData.imageFilename);
-trainData = choose(oriTrainData, 50);  % Choose only a part of samples of each label to train
+trainData = oriTrainData;
+% trainData = choose(oriTrainData, 50);  % Choose only a part of samples of each label to train
 fprintf('Training data size: %d*%d\n', size(trainData, 1), size(trainData, 2));
 
 % Show labels info
